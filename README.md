@@ -1,88 +1,140 @@
-# Django Blog Project
+# 📝 Simple Django Blog App
 
-A simple blog application built with Django where users can browse all posts on the home page and open each post on its own detail page.
+A clean, lightweight blog application built with **Django 6.0**. Users can browse all published posts on the home page and read individual posts on dedicated detail pages. Content is managed through the built-in Django admin panel.
 
-## Features
+---
 
-- View all blog posts on the home page
-- Open a single blog post by ID
-- Access Django admin at `/admin/`
-- Use SQLite for local development
+## ✨ Features
 
-## Tech Stack
+- **Home Page** — Lists all blog posts in reverse chronological order with truncated previews
+- **Post Detail Page** — Displays the full content of a selected blog post
+- **Admin Panel** — Create, edit, and delete posts via Django's built-in admin interface
+- **SQLite Database** — Zero-configuration database for local development
 
-- Python
-- Django 6.0.2
-- SQLite
-- HTML and CSS
+---
 
-## App Overview
+## 🛠 Tech Stack
 
-- `posts` contains the blog model, views, URLs, and admin registration area.
-- `blogs` contains the main project settings and root URL configuration.
+| Layer      | Technology       |
+| ---------- | ---------------- |
+| Language   | Python 3.13+     |
+| Framework  | Django 6.0.3     |
+| Database   | SQLite 3         |
+| Templating | Django Templates |
+| Styling    | Inline CSS       |
 
-## Project Structure
+---
 
-```text
-.
-├── blogs/          # Project settings and root URL configuration
-├── posts/          # Blog app with models, views, and routes
-├── templates/      # HTML templates
-├── manage.py
-├── README.md
-└── requirements.txt
+## 📁 Project Structure
+
+```
+simple-django-blog-app/
+├── blogs/                  # Django project configuration
+│   ├── __init__.py
+│   ├── asgi.py             # ASGI entry point
+│   ├── settings.py         # Project settings
+│   ├── urls.py             # Root URL configuration
+│   └── wsgi.py             # WSGI entry point
+│
+├── posts/                  # Blog application
+│   ├── __init__.py
+│   ├── admin.py            # Admin registration for Post model
+│   ├── apps.py             # App configuration
+│   ├── migrations/         # Database migrations
+│   ├── models.py           # Post data model
+│   ├── tests.py            # Unit tests
+│   ├── urls.py             # App-level URL routes
+│   └── views.py            # View functions (index, post detail)
+│
+├── templates/              # HTML templates
+│   ├── index.html          # Home page — lists all posts
+│   └── posts.html          # Detail page — single post view
+│
+├── .gitignore
+├── manage.py               # Django management script
+├── requirements.txt        # Python dependencies
+└── README.md
 ```
 
-## Setup
+---
 
-1. Create and activate a virtual environment
+## 🚀 Getting Started
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+### Prerequisites
 
-2. Install dependencies
+- **Python 3.13+** installed on your system
 
-```bash
-pip install -r requirements.txt
-```
+### Installation
 
-3. Apply migrations
+1. **Clone the repository**
 
-```bash
-python manage.py migrate
-```
+   ```bash
+   git clone https://github.com/sumeet217/simple-django-blog-app.git
+   cd simple-django-blog-app
+   ```
 
-4. Run the development server
+2. **Create and activate a virtual environment**
 
-```bash
-python manage.py runserver
-```
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate        # macOS / Linux
+   venv\Scripts\activate           # Windows
+   ```
 
-5. Open the project in your browser
+3. **Install dependencies**
 
-```text
-http://127.0.0.1:8000/
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## Routes
+4. **Run database migrations**
 
-| Route | Description |
-| --- | --- |
-| `/` | Display all blog posts |
-| `/post/<id>` | Display a single blog post |
-| `/admin/` | Open the Django admin panel |
+   ```bash
+   python manage.py migrate
+   ```
 
-## Data Model
+5. **Create an admin user** _(optional, for managing posts)_
 
-The `Post` model includes:
+   ```bash
+   python manage.py createsuperuser
+   ```
 
-- `title`
-- `body`
-- `created_at`
+6. **Start the development server**
 
-## Notes
+   ```bash
+   python manage.py runserver
+   ```
 
-- The project uses `db.sqlite3` for local development.
-- You can create an admin user with `python manage.py createsuperuser`.
+7. **Open in your browser**
+
+   ```
+   http://127.0.0.1:8000/
+   ```
+
+---
+
+## 🔗 URL Routes
+
+| Route            | View       | Description                    |
+| ---------------- | ---------- | ------------------------------ |
+| `/`              | `index`    | Home page — all posts          |
+| `/post/<id>`     | `post`     | Detail page — single post      |
+| `/admin/`        | _built-in_ | Django admin panel             |
+
+---
+
+## 📦 Data Model
+
+### `Post`
+
+| Field        | Type              | Description                          |
+| ------------ | ----------------- | ------------------------------------ |
+| `title`      | `CharField(255)`  | Title of the blog post               |
+| `body`       | `CharField(1M)`   | Full body content of the post        |
+| `created_at` | `DateTimeField`   | Timestamp when the post was created  |
+
+---
+
+## 📄 License
+
+This project is open source and available for personal and educational use.
