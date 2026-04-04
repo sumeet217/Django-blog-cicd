@@ -22,6 +22,7 @@ A clean, lightweight blog application built with **Django 6.0**. Users can brows
 | Database   | SQLite 3         |
 | Templating | Django Templates |
 | Styling    | Inline CSS       |
+| Container  | Docker           |
 
 ---
 
@@ -50,7 +51,9 @@ simple-django-blog-app/
 │   ├── index.html          # Home page — lists all posts
 │   └── posts.html          # Detail page — single post view
 │
+├── .dockerignore           # Files excluded from Docker build
 ├── .gitignore
+├── Dockerfile              # Multi-stage Docker image definition
 ├── manage.py               # Django management script
 ├── requirements.txt        # Python dependencies
 └── README.md
@@ -110,6 +113,46 @@ simple-django-blog-app/
    ```
    http://127.0.0.1:8000/
    ```
+
+---
+
+## 🐳 Run with Docker
+
+If you prefer containers over a local Python setup, you can run the app with Docker in just two commands.
+
+### Prerequisites
+
+- **Docker** installed and running ([Get Docker](https://docs.docker.com/get-docker/))
+
+### Build the image
+
+```bash
+docker build -t django-blog .
+```
+
+### Run the container
+
+```bash
+docker run -d -p 8000:8000 --name blog django-blog
+```
+
+The app will be available at **http://localhost:8000/**.
+
+### Create an admin user inside the container
+
+```bash
+docker exec -it blog python manage.py createsuperuser
+```
+
+### Useful commands
+
+| Command | Description |
+| --- | --- |
+| `docker logs blog` | View container logs |
+| `docker stop blog` | Stop the container |
+| `docker start blog` | Restart a stopped container |
+| `docker rm blog` | Remove the container |
+| `docker rmi django-blog` | Remove the image |
 
 ---
 
