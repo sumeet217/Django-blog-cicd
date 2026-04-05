@@ -4,10 +4,17 @@ stages:
   - push_to_dockerhub
   - deploy
 
+varibales:
+  IMAGE: sumeet/django-blog:CICD  
 build_job:
   stage: build
+<<<<<<< HEAD
   script:
     - docker build -t django_app:latest .
+=======
+  script:
+    - docker build -t $IMAGE .
+>>>>>>> d63da51 (solved the docker-compose error)
   
   tags:
     - dev
@@ -16,20 +23,22 @@ test_job:
   stage: test
   script:
     - echo "testing ...."
+  tags:
+    - dev
 
 push_job:
   stage: push_to_dockerhub
   script:
-    - docker login -u $DOCKERHUB_USER -P $DOCKERHUB_PASS
-    - docker image tag django_app:latest $DOCKERHUB_USER/django_app:latest   
-    - docker push $DOCKERHUB_USER/django_app:latest
+    - echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
+    - docker push $IMAGE
   tags:
     - dev
 
 deploy_job:
   stage: deploy
   script:
-    - docker-compose up -d
+    - docker compose pull
+    - docker compose up -d --force-recreate
   tags:
     - dev   
 
