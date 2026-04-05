@@ -158,11 +158,8 @@ sudo systemctl restart gitlab-runner
 
 > Add your screenshots here after deployment
 
-| Pipeline | App | Admin |
+| Pipeline | Docker | Blog Page |
 |---|---|---|
-| ![Pipeline](docs/pipeline.png) | ![App](docs/app.png) | ![Admin](docs/admin.png) |
+| ![Pipeline](docs/pipeline.png) | ![App](docs/docker.png) | ![Admin](docs/blog.png) |
 
----
-
-## 📄 License
 
