@@ -2,11 +2,11 @@ stages:
   - build
   - test
   - push_to_dockerhub
-  - depploy
+  - deploy
 
 build_job:
   stage: build
-  scripts:
+  script:
     - docker build -t django_app:latest .
   
   tags:
