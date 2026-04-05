@@ -1,232 +1,168 @@
-# 📝 Simple Django Blog App
+# Django Blog App — CI/CD Pipeline
 
-A clean, lightweight blog application built with **Django 6.0**. Users can browse all published posts on the home page and read individual posts on dedicated detail pages. Content is managed through the built-in Django admin panel.
-
----
-
-## ✨ Features
-
-- **Home Page** — Lists all blog posts in reverse chronological order with truncated previews
-- **Post Detail Page** — Displays the full content of a selected blog post
-- **Admin Panel** — Create, edit, and delete posts via Django's built-in admin interface
-- **SQLite Database** — Zero-configuration database for local development
-- **PostgreSQL Support** — Production-ready PostgreSQL via Docker Compose
+A Django blog application containerized with Docker and deployed automatically to AWS EC2 using a 4-stage GitLab CI/CD pipeline.
 
 ---
 
-## 🛠 Tech Stack
+## 🏗️ Architecture
 
-| Layer      | Technology                          |
-| ---------- | ----------------------------------- |
-| Language   | Python 3.13+                        |
-| Framework  | Django 6.0.3                        |
-| Database   | SQLite 3 (local) / PostgreSQL (prod)|
-| Templating | Django Templates                    |
-| Styling    | Inline CSS                          |
-| Container  | Docker & Docker Compose             |
+```mermaid
+flowchart TD
+    A[Developer\ngit push to GitLab] --> B[GitLab CI triggered]
+    B --> C[Stage 1 — Build\ndocker build]
+    C --> D[Stage 2 — Test\necho testing]
+    D --> E[Stage 3 — Push\ndocker push to DockerHub]
+    E --> F[DockerHub registry]
+    F --> G[Stage 4 — Deploy\ndocker compose pull + up]
+    G --> H[AWS EC2 Ubuntu\nGitLab runner]
+    H --> I[App live on port 8000\nDjango + PostgreSQL]
+
+    style A fill:#7F77DD,color:#fff
+    style I fill:#1D9E75,color:#fff
+    style F fill:#1D9E75,color:#fff
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | Django 6.x, Python 3.13 |
+| Database | PostgreSQL 15 (production), SQLite (development) |
+| Containerization | Docker, Docker Compose |
+| CI/CD | GitLab CI/CD |
+| Container Registry | DockerHub |
+| Cloud | AWS EC2 (Ubuntu 24.04) |
+
+---
+
+## 🚀 CI/CD Pipeline
+
+| Stage | Job | What it does |
+|---|---|---|
+| Build | `build_job` | Builds Docker image using multi-stage Dockerfile |
+| Test | `test_job` | Runs test suite |
+| Push | `push_job` | Pushes image to DockerHub securely |
+| Deploy | `deploy_job` | Pulls latest image and recreates containers on EC2 |
+
+---
+
+## ⚙️ Environment Variables
+
+| Variable | Description | Required |
+|---|---|---|
+| `USE_POSTGRES` | Set to `"True"` to use PostgreSQL | Yes (production) |
+| `POSTGRES_DB` | Database name | Yes |
+| `POSTGRES_USER` | Database user | Yes |
+| `POSTGRES_PASSWORD` | Database password | Yes |
+| `POSTGRES_HOST` | Database host | Yes |
+| `POSTGRES_PORT` | Database port | Yes |
+| `DJANGO_SECRET_KEY` | Django secret key | Yes |
+| `DEBUG` | Set to `"False"` in production | Yes |
+| `DOCKERHUB_USER` | DockerHub username (GitLab CI secret) | CI only |
+| `DOCKERHUB_PASS` | DockerHub password (GitLab CI secret) | CI only |
+
+> **GitLab CI Secrets**: Go to GitLab → Settings → CI/CD → Variables to add `DOCKERHUB_USER` and `DOCKERHUB_PASS`
 
 ---
 
 ## 📁 Project Structure
 
 ```
-simple-django-blog-app/
-├── blogs/                  # Django project configuration
-│   ├── __init__.py
-│   ├── asgi.py             # ASGI entry point
-│   ├── settings.py         # Project settings (SQLite / PostgreSQL)
-│   ├── urls.py             # Root URL configuration
-│   └── wsgi.py             # WSGI entry point
-│
-├── posts/                  # Blog application
-│   ├── __init__.py
-│   ├── admin.py            # Admin registration for Post model
-│   ├── apps.py             # App configuration
-│   ├── migrations/         # Database migrations
-│   ├── models.py           # Post data model
-│   ├── tests.py            # Unit tests
-│   ├── urls.py             # App-level URL routes
-│   └── views.py            # View functions (index, post detail)
-│
-├── templates/              # HTML templates
-│   ├── index.html          # Home page — lists all posts
-│   └── posts.html          # Detail page — single post view
-│
-├── .dockerignore           # Files excluded from Docker build
-├── .gitignore
-├── docker-compose.yaml     # Multi-container setup (Django + PostgreSQL)
-├── Dockerfile              # Multi-stage Docker image definition
-├── manage.py               # Django management script
+django-blog-cicd/
+├── .gitlab-ci.yml          # CI/CD pipeline (4 stages)
+├── Dockerfile              # Multi-stage Docker build
+├── docker-compose.yml      # Container orchestration
+├── manage.py               # Django management
 ├── requirements.txt        # Python dependencies
-└── README.md
+├── blogs/                  # Django project settings
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── posts/                  # Blog posts app
+│   ├── models.py
+│   ├── views.py
+│   └── urls.py
+├── templates/              # HTML templates
+└── docs/                   # Screenshots and diagrams
 ```
 
 ---
 
-## 🗄 Database Strategy
-
-| Environment          | Database   | Configuration              |
-| -------------------- | ---------- | -------------------------- |
-| Local development    | SQLite 3   | Default — no setup needed  |
-| Docker Compose       | PostgreSQL | Automatic via env vars     |
-| GitLab CI / Production | PostgreSQL | Set `USE_POSTGRES=True`  |
-
-The app uses SQLite by default. When the environment variable `USE_POSTGRES=True` is set (automatically done in `docker-compose.yaml`), it switches to PostgreSQL using `POSTGRES_*` env vars.
-
----
-
-## 🚀 Getting Started (Local)
+## 🖥️ Run Locally
 
 ### Prerequisites
-
-- **Python 3.13+** installed on your system
-
-### Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/sumeet217/simple-django-blog-app.git
-   cd simple-django-blog-app
-   ```
-
-2. **Create and activate a virtual environment**
-
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate        # macOS / Linux
-   venv\Scripts\activate           # Windows
-   ```
-
-3. **Install dependencies**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Run database migrations**
-
-   ```bash
-   python manage.py migrate
-   ```
-
-5. **Create an admin user** _(optional, for managing posts)_
-
-   ```bash
-   python manage.py createsuperuser
-   ```
-
-6. **Start the development server**
-
-   ```bash
-   python manage.py runserver
-   ```
-
-7. **Open in your browser**
-
-   ```
-   http://127.0.0.1:8000/
-   ```
-
----
-
-## 🐳 Run with Docker Compose (Recommended)
-
-Spins up Django + PostgreSQL together with a single command. Migrations run automatically on startup.
-
-### Prerequisites
-
-- **Docker** and **Docker Compose** installed ([Get Docker](https://docs.docker.com/get-docker/))
-
-### Start the application
+- Docker
+- Docker Compose v2
 
 ```bash
-docker compose up --build
+# Clone the repo
+git clone https://github.com/sumeet217/Django-blog-cicd.git
+cd Django-blog-cicd
+
+# Start all services
+docker compose up -d
+
+# Create a superuser
+docker exec -it django_app python manage.py createsuperuser
+
+# Visit the app
+http://localhost:8000
+
+# Visit the admin panel
+http://localhost:8000/admin
 ```
 
-This will:
-- Build the Django image
-- Start a PostgreSQL 15 database with a healthcheck
-- Run migrations automatically once the database is ready
-- Serve the app at **http://localhost:8000/**
-
-### Create an admin user
+### Useful Commands
 
 ```bash
-docker compose exec web python manage.py createsuperuser
-```
-
-### Stop the application
-
-```bash
+# Stop the server
 docker compose down
+
+# View logs
+docker compose logs -f
+
+# Restart containers
+docker compose restart
+
+# Wipe everything including database
+docker compose down -v
 ```
-
-### Useful commands
-
-| Command | Description |
-| --- | --- |
-| `docker compose up -d` | Start in detached (background) mode |
-| `docker compose logs -f web` | Follow Django container logs |
-| `docker compose logs -f db` | Follow PostgreSQL logs |
-| `docker compose down -v` | Stop and **delete database data** |
-| `docker compose exec web python manage.py shell` | Open Django shell |
 
 ---
 
-## 🐳 Run with Docker (Standalone — SQLite)
+## ☁️ AWS EC2 Setup
 
-If you only need the Django app without PostgreSQL, you can use Docker directly. This runs with SQLite.
-
-### Build and run
+The GitLab runner is hosted on an EC2 instance (Ubuntu 24.04) configured as a shell executor.
 
 ```bash
-docker build -t django-blog .
-docker run -d -p 8000:8000 --name blog django-blog
+# Install GitLab runner
+curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+sudo apt-get install gitlab-runner -y
+
+# Add users to docker group
+sudo usermod -aG docker ubuntu
+sudo usermod -aG docker gitlab-runner
+
+# Install Docker Compose v2
+sudo apt-get install docker-compose-plugin -y
+
+# Restart runner
+sudo systemctl restart gitlab-runner
 ```
-
-The app will be available at **http://localhost:8000/**.
-
-### Create an admin user inside the container
-
-```bash
-docker exec -it blog python manage.py createsuperuser
-```
-
-### Useful commands
-
-| Command | Description |
-| --- | --- |
-| `docker logs blog` | View container logs |
-| `docker stop blog` | Stop the container |
-| `docker start blog` | Restart a stopped container |
-| `docker rm blog` | Remove the container |
-| `docker rmi django-blog` | Remove the image |
 
 ---
 
-## 🔗 URL Routes
+## 📸 Screenshots
 
-| Route            | View       | Description                    |
-| ---------------- | ---------- | ------------------------------ |
-| `/`              | `index`    | Home page — all posts          |
-| `/post/<id>`     | `post`     | Detail page — single post      |
-| `/admin/`        | _built-in_ | Django admin panel             |
+> Add your screenshots here after deployment
 
----
-
-## 📦 Data Model
-
-### `Post`
-
-| Field        | Type              | Description                          |
-| ------------ | ----------------- | ------------------------------------ |
-| `title`      | `CharField(255)`  | Title of the blog post               |
-| `body`       | `CharField(1M)`   | Full body content of the post        |
-| `created_at` | `DateTimeField`   | Timestamp when the post was created  |
+| Pipeline | App | Admin |
+|---|---|---|
+| ![Pipeline](docs/pipeline.png) | ![App](docs/app.png) | ![Admin](docs/admin.png) |
 
 ---
 
 ## 📄 License
 
-This project is open source and available for personal and educational use.
