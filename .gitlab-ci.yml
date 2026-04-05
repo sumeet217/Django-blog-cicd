@@ -5,17 +5,12 @@ stages:
   - deploy
 
 varibales:
-  IMAGE: sumeet/django-blog:CICD  
+  IMAGE: sumeet02/django-blog:CICD
+
 build_job:
   stage: build
-<<<<<<< HEAD
-  script:
-    - docker build -t django_app:latest .
-=======
   script:
     - docker build -t $IMAGE .
->>>>>>> d63da51 (solved the docker-compose error)
-  
   tags:
     - dev
 
