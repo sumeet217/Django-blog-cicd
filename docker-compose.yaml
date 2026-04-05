@@ -1,34 +1,41 @@
+version: "3.9"
+
 services:
   web:
-    build: .
+    image: sumeet02/django-blog:CICD
     container_name: django_app
+    restart: always
+
     command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
-    volumes:
-      - .:/app
+
     ports:
       - "8000:8000"
+
     depends_on:
       db:
         condition: service_healthy
+
     environment:
-      - USE_POSTGRES=True
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_HOST=db
-      - POSTGRES_PORT=5432
+      USE_POSTGRES: "True"
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
 
   db:
     image: postgres:15-alpine
-    platform: linux/arm64
     container_name: postgres_db
     restart: always
+
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -36,4 +43,4 @@ services:
       retries: 5
 
 volumes:
-  postgres_data:
+  postgres_data:      
