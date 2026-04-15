@@ -3,72 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tomi's Blog</title>
+    <meta name="description" content="{{ posts.title }} — Sumeet's Blog">
+    <title>{{ posts.title }} — Sumeet's Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .container {
-            width: 80%;
-            margin: 30px auto;
+        /* ── Navbar ── */
+        .navbar {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .header {
-            background-color: white;
-            padding: 40px;
-            text-align: center;
-            font-size: 40px;
-            font-weight: bold;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        .navbar .brand {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.5px;
         }
 
-        .card {
-            background-color: white;
-            margin-top: 20px;
-            padding: 20px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        .navbar .brand span {
+            color: #60a5fa;
         }
 
-        .title {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .date {
-            font-size: 12px;
-            color: gray;
-            margin: 10px 0;
-        }
-
-        .content {
+        .navbar .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
             font-size: 14px;
+            font-weight: 500;
+            margin-left: 28px;
+            transition: color 0.2s ease;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        /* ── Article Container ── */
+        .article-container {
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+        }
+
+        /* ── Back Link ── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #3b82f6;
+            text-decoration: none;
+            margin-bottom: 28px;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #1d4ed8;
+        }
+
+        /* ── Article Card ── */
+        .article-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 40px 44px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
+        }
+
+        .article-card .post-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 12px 0;
+            line-height: 1.25;
+            letter-spacing: -0.5px;
+        }
+
+        .article-card .post-meta {
+            font-size: 14px;
+            color: #94a3b8;
+            font-weight: 500;
+            margin: 0 0 28px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .article-card .post-meta::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #60a5fa;
+            border-radius: 50%;
+        }
+
+        .article-card .post-body {
+            font-size: 16px;
+            color: #334155;
+            line-height: 1.85;
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            background-color: #0f172a;
+            color: #64748b;
+            text-align: center;
+            padding: 28px 20px;
+            font-size: 13px;
+            margin-top: auto;
+        }
+
+        .footer span {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .navbar {
+                padding: 0 20px;
+            }
+
+            .article-card {
+                padding: 24px 22px;
+            }
+
+            .article-card .post-title {
+                font-size: 24px;
+            }
+
+            .article-card .post-body {
+                font-size: 15px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="brand">Sumeet<span>.</span></div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+        </div>
+    </nav>
 
-        <!-- Header -->
-        <div class="header">
-            Sumeet's Blog
-        </div>
-       
-        <!-- Blog Post 1 -->
-        <div class="card">
-          
-            <h1>{{posts.title}}</h1>
-            <h5>{{posts.created_at}}</h5>
-            <p>{{posts.body}}</p>
-          
-        </div>
-       
-    </div>
+    <!-- Article -->
+    <main class="article-container">
+
+        <a href="/" class="back-link">← Back to all posts</a>
+
+        <article class="article-card">
+            <h1 class="post-title">{{ posts.title }}</h1>
+            <p class="post-meta">{{ posts.created_at|date:"F j, Y" }}</p>
+            <div class="post-body">{{ posts.body }}</div>
+        </article>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        &copy; 2026 <span>Sumeet's Blog</span>. All rights reserved.
+    </footer>
 
 </body>
 </html>

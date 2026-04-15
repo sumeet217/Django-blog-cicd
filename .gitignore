@@ -6,19 +6,42 @@ __pycache__/
 
 # Virtual environment
 venv/
+.venv/
 .env/
+env/
+
+# Environment variables
+.env
+*.env
 
 # Database
 db.sqlite3
+db.sqlite3-journal
 
 # Django stuff
 *.log
 staticfiles/
+media/
 
 # OS files
 .DS_Store
+Thumbs.db
 
-# VS Code (optional)
+# IDE / Editor
 .vscode/
-
+.idea/
+*.swp
+*.swo
+*~
 .docker-compose.yaml.swp
+
+# Docker
+*.egg-info/
+dist/
+build/
+
+# Coverage / Testing
+htmlcov/
+.coverage
+.tox/
+.pytest_cache/
