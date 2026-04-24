@@ -156,7 +156,7 @@ sudo systemctl restart gitlab-runner
 
 ## 📸 Screenshots
 
-> Add your screenshots here after deployment
+
 
 | Pipeline | Docker | Blog Page |
 |---|---|---|
